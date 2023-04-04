@@ -112,9 +112,9 @@
 
                 var table = document.getElementById('inputTable');
                 for (var r = 1, n = table.rows.length; r < n; r++) {
-                    for (var c = 0, m = table.rows[r].cells.length; c < m; c++) {
-                        //console.log(table.rows[r].cells[c].innerHTML);
-                    }
+                    // for (var c = 0, m = table.rows[r].cells.length; c < m; c++) {
+                    //     console.log(table.rows[r].cells[c].innerHTML);
+                    // }
                     pid.push(parseInt(table.rows[r].cells[0].innerHTML));
                     bt.push(parseInt(table.rows[r].cells[1].innerHTML));
                     bt2.push(parseInt(table.rows[r].cells[1].innerHTML));
@@ -135,10 +135,10 @@
 
 
             function nonPreemptiveSelection(pid, at, bt, flag) {
-                var n = pid.length;
-                var clock = 0;
-                var tot = 0;
-                var items = [];
+                var n = pid.length; // Var total jumlah value
+                var clock = 0;      // Var Arrival time  
+                var tot = 0;        // Var total proses
+                var items = []; 
                 var ct = [];
                 var ta = [];
                 var wt = [];
@@ -147,42 +147,50 @@
 
 
                 while (true) {
-                    var min = 100;
-                    var c = n; // c represents the current PID
-                    if (tot == n) // total no of process = completed process loop will be terminated
+                    var min = 100; // Asumsi
+                    var c = n; // Simpan total jumlah value
+                    if (tot == n) // bila total prosesnya sama dengan proses loopnya maka akan di hentikan
                         break;
 
                     for (var i = 0; i < n; i++) {
                         /*
-                         * If i'th process arrival time <= system time and its flag=0 and burst<min 
-                         * That process will be executed first 
-                         */
+                        Jika arrival time <= system time dan flagnya = 0
+                        dan burst < minimalnya = 100
+
+                        Proses ini akan di jalankan terlebih dahulu
+                        */
                         var count = 0;
-                        if ((at[i] <= clock) && (flag[i] == 0) && (bt[i] < min)) {
+                        if ((at[i] <= clock) && (flag[i] == 0) && (bt[i] < min)) // Selama semua ini terpenuhi maka Asumsinya akan di gantikan dengan burst time saat ini
+                                                                                 // Dan i nya di pindahkan ke c
+                        {
                             min = bt[i];
                             c = i;
                         }
 
                     }
-                    /* If c==n means c value can not updated because no process arrival time< system time so we increase the system time */
-                    if (c == n)
+                    /*
+                    Jika c nya == n jumlah valuenya berarti nilai c tidak dapat
+                    di update karena tidak ada arrival time < system time maka akan menambahkan
+                    arrival time
+                    */
+                    if (c == n) // jika c nya == n maka timenya akan di tamahkan
                         clock++;
-                    else {
+                    else {      // jika tika maka lakukan push output
                         var temp = [];
                         temp.push(pid[c]);
                         temp.push(bt[c]);
                         items.push(temp);
-
+                        
                         ct[c] = clock + bt[c];
                         ta[c] = ct[c] - at[c];
                         wt[c] = ta[c] - bt[c];
 
-                        clock += bt[c];
-                        flag[c] = 1;
-                        tot++;
+                        clock += bt[c]; 
+                        flag[c] = 1;    // Tandai node
+                        tot++;          // Tambahkan total
                     }
                 }
-
+                // print hasil
                 for (i = 0; i < n; i++) {
                     avgwt += wt[i];
                     avgta += ta[i];
@@ -196,9 +204,9 @@
 
 
             function preemptiveSelection(pid, at, bt, flag, bt2) {
-                var n = pid.length;
-                var clock = 0;
-                var tot = 0;
+                var n = pid.length; // Var total jumlah value
+                var clock = 0;      // Var Arrival time  
+                var tot = 0;        // Var total proses
                 var items = [];
                 var ct = [];
                 var ta = [];
@@ -209,47 +217,52 @@
                 var count2 = 0;
 
                 while (true) {
-                    var c = n;
-                    var min = 100;
+                    var min = 100; // Asumsi minimum
+                    var c = n; // Simpan total jumlah value
                     if (tot == n) {
-                        items.push(temp);
+                        items.push(temp);   // sama seperti logika yang nonpremtive hanya saja tetap bisa menpush bila ada kesamaan
                         break;
                     }
 
                     for (var i = 0; i < n; i++) {
                         /*
-                         * If i'th process arrival time <= system time and its flag=0 and burst<min 
-                         * That process will be executed first 
-                         */
+                        jika arrival time <= system time dan blm dilalui dengan flag = 0
+                        dan burst time < minimum
+
+                        Maka proses akan dieksekusi lebih dahulu
+                        */
                         var count = 0;
-                        if ((at[i] <= clock) && (flag[i] == 0) && (bt[i] < min)) {
+                        if ((at[i] <= clock) && (flag[i] == 0) && (bt[i] < min)) // Selama semua ini terpenuhi maka Asumsinya akan di gantikan dengan burst time saat ini
+                                                                                 // Dan i nya di pindahkan ke c
+                        {
                             min = bt[i];
                             c = i;
                         }
 
                     }
 
-                    // If there's no c:
-                    if (c == n) {
-                        clock += 1;
+                    if (c == n) // jika c nya == n maka timenya akan di tamahkan 
+                    {
+                        clock++;
                     }
-                    // If there's a c:
-                    else {
+                    else {      
                         bt[c]--;
                         clock++;
-                        if (bt[c] == 0) {
+                        if (bt[c] == 0) // jika bt nya sama dengan 0 tandai 
+                        {
                             ct[c] = clock;
                             flag[c] = 1
                             tot++;
                         }
 
                         if (count2 == 0) {
-                            //temp2 holds the previous c
+                            // Simpan c sebelumnya
                             var temp2 = c;
                             var temp = [];
+                            // lakukan push sementara
                             temp.push(pid[c]);
                             temp.push(1)
-                        } else {
+                        } else { // lakukan push sisanya
                             if (c == temp2) {
                                 temp[1]++;
                             } else {

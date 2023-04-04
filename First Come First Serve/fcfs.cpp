@@ -15,13 +15,13 @@ struct Process {
     int waiting_time;   // Waktu waiting
 };
 
-void printBar (int burst_time, int i) {
+void printBar (int burst_time, int i, int id) {
     cout << "[";
     for (int j = 0; j < burst_time; j++) {
         this_thread::sleep_for(chrono::seconds(1)); 
         cout << "-";
     }
-    cout << "] Proses " << i + 1 << " (" << burst_time << "s)" << endl;
+    cout << "] Proses " << id << " (" << burst_time << "s)" << endl;
 }
 
 void printSpasi (int burst_time) {
@@ -40,12 +40,18 @@ int main() {
         {2, 1, 4, 0, 0},
         {3, 2, 8, 0, 0},
         {4, 3, 1, 0, 0},
-        {5, 4, 3, 0, 0}
+        {5, 2, 3, 0, 0}
     };
 
     // Urutkan proses berdasarkan waktu kedatangan
     sort(processes.begin(), processes.end(), [](Process a, Process b) {
-        return a.arrival_time < b.arrival_time;
+        // kalo waktu arrival time nya sama
+        if (a.arrival_time == b.arrival_time) {
+            // diambil yang burst time nya lebih cepat
+            return a.burst_time < b.burst_time;
+        } else {
+            return a.arrival_time < b.arrival_time;
+        }
     });
 
     // Inisialisasi waktu saat ini, Gantt Chart, dan total waiting time
@@ -76,7 +82,7 @@ int main() {
             spasi += processes[i - 1].burst_time + 2;
             printSpasi(spasi);
         }
-        printBar(processes[i].burst_time, i);
+        printBar(processes[i].burst_time, processes[i].id, i);
     }
 
     // Cetak informasi setiap proses
