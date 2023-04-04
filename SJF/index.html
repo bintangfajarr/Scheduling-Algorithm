@@ -2,7 +2,7 @@
 <html lang="en-US">
 
 <head>
-    <title>SGFSimulator</title>
+    <title>SJFSimulator</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="index.css" />
 </head>
@@ -16,7 +16,7 @@
 
     <div class="form-group-2">
         <label>
-                Select to preemptive SJF simulations  :
+                Pilih Untuk Mengaktifkan Preemptive  :
             </label>
 
         <!-- Rounded switch -->
@@ -42,11 +42,11 @@
                 <input type="number" id="arrivalTime" value="">
             </div>
             <div class="form-group">
-                <button class="button" type="button" onclick="createTable()">Enter values</button>
+                <button class="button" type="button" onclick="createTable()">Masukan Value</button>
             </div>
 
             <div class="form-group">
-                <button class="button" type="button" onclick="printGanttChart()">Show Gantt Chart</button>
+                <button class="button" type="button" onclick="printGanttChart()">Tampilkan Gantt Chart</button>
             </div>
         </form>
     </div>
@@ -136,9 +136,9 @@
 
             function nonPreemptiveSelection(pid, at, bt, flag) {
                 var n = pid.length; // Var total jumlah value
-                var clock = 0;      // Var Arrival time  
-                var tot = 0;        // Var total proses
-                var items = []; 
+                var clock = 0; // Var Arrival time  
+                var tot = 0; // Var total proses
+                var items = [];
                 var ct = [];
                 var ta = [];
                 var wt = [];
@@ -161,7 +161,7 @@
                         */
                         var count = 0;
                         if ((at[i] <= clock) && (flag[i] == 0) && (bt[i] < min)) // Selama semua ini terpenuhi maka Asumsinya akan di gantikan dengan burst time saat ini
-                                                                                 // Dan i nya di pindahkan ke c
+                        // Dan i nya di pindahkan ke c
                         {
                             min = bt[i];
                             c = i;
@@ -175,19 +175,19 @@
                     */
                     if (c == n) // jika c nya == n maka timenya akan di tamahkan
                         clock++;
-                    else {      // jika tika maka lakukan push output
+                    else { // jika tika maka lakukan push output
                         var temp = [];
                         temp.push(pid[c]);
                         temp.push(bt[c]);
                         items.push(temp);
-                        
+
                         ct[c] = clock + bt[c];
                         ta[c] = ct[c] - at[c];
                         wt[c] = ta[c] - bt[c];
 
-                        clock += bt[c]; 
-                        flag[c] = 1;    // Tandai node
-                        tot++;          // Tambahkan total
+                        clock += bt[c];
+                        flag[c] = 1; // Tandai node
+                        tot++; // Tambahkan total
                     }
                 }
                 // print hasil
@@ -205,8 +205,8 @@
 
             function preemptiveSelection(pid, at, bt, flag, bt2) {
                 var n = pid.length; // Var total jumlah value
-                var clock = 0;      // Var Arrival time  
-                var tot = 0;        // Var total proses
+                var clock = 0; // Var Arrival time  
+                var tot = 0; // Var total proses
                 var items = [];
                 var ct = [];
                 var ta = [];
@@ -220,7 +220,7 @@
                     var min = 100; // Asumsi minimum
                     var c = n; // Simpan total jumlah value
                     if (tot == n) {
-                        items.push(temp);   // sama seperti logika yang nonpremtive hanya saja tetap bisa menpush bila ada kesamaan
+                        items.push(temp); // sama seperti logika yang nonpremtive hanya saja tetap bisa menpush bila ada kesamaan
                         break;
                     }
 
@@ -233,7 +233,7 @@
                         */
                         var count = 0;
                         if ((at[i] <= clock) && (flag[i] == 0) && (bt[i] < min)) // Selama semua ini terpenuhi maka Asumsinya akan di gantikan dengan burst time saat ini
-                                                                                 // Dan i nya di pindahkan ke c
+                        // Dan i nya di pindahkan ke c
                         {
                             min = bt[i];
                             c = i;
@@ -244,8 +244,7 @@
                     if (c == n) // jika c nya == n maka timenya akan di tamahkan 
                     {
                         clock++;
-                    }
-                    else {      
+                    } else {
                         bt[c]--;
                         clock++;
                         if (bt[c] == 0) // jika bt nya sama dengan 0 tandai 
